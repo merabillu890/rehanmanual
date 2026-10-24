@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Send USDT</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        :root { --blue-primary: #1E4DFF; --btn-purple: #9DA3FF; --bg-pill: #F4F4F6; --text-label: #646464; --border-light: #EFEFEF; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body, html { height: 100%; background-color: #fff; display: flex; flex-direction: column; overflow: hidden; }
+        .content { flex: 1; padding: 10px 20px; overflow-y: auto; }
+        .section { margin-top: 15px; }
+        .label { font-size: 14.5px; color: var(--text-label); font-weight: 600; margin-bottom: 10px; display: block; }
+        .input-group { display: flex; align-items: center; border: 1.8px solid var(--border-light); border-radius: 14px; height: 58px; padding: 0 16px; transition: 0.2s; position: relative; }
+        .input-group.active { border-color: var(--blue-primary); border-width: 2px; }
+        .input-group.invalid { border-color: #D93025; }
+        .input-group input { flex: 1; border: none; outline: none; font-size: 16px; font-weight: 500; color: #000; background: transparent; width: 100%; }
+        #recipientInput { text-align: right; padding-right: 8px; }
+        #amountInput { text-align: left; }
+        .actions { display: flex; align-items: center; gap: 12px; }
+        .blue-text { color: var(--blue-primary); font-weight: 700; font-size: 15px; cursor: pointer; user-select: none; }
+        .clear-btn { width: 22px; height: 22px; background: #5F6368; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; margin-right: 5px; }
+        .clear-btn::after { content: '×'; color: #FFFFFF; font-size: 18px; font-weight: 600; margin-top: -2px; }
+        .icon-svg { width: 22px; height: 22px; fill: none; stroke: var(--blue-primary); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .network-pill { display: inline-flex; align-items: center; background-color: var(--bg-pill); padding: 6px 12px; border-radius: 20px; gap: 8px; }
+        .bnb-logo-image { width: 20px; height: 20px; object-fit: contain; }
+        .network-text { font-size: 14px; color: #555; font-weight: 600; }
+        .footer { padding: 20px; }
+        .next-btn { width: 100%; height: 56px; background-color: var(--btn-purple); color: #fff; border: none; border-radius: 30px; font-size: 17px; font-weight: 700; cursor: pointer; }
+        .next-btn.enabled { background-color: var(--blue-primary); }
+        .next-btn:disabled { cursor: default; }
+        .approx-txt { font-size: 13px; color: #9FA3A9; margin-top: 10px; font-weight: 500; }
+        .msg { font-size: 13px; margin-top: 12px; font-weight: 500; line-height: 1.5; color: #D93025; word-break: break-all; }
+        .msg.ok { color: #0A7D33; }
+        .msg a { color: inherit; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <div class="section" style="margin-top: 20px;">
+            <label class="label">Address or Domain Name</label>
+            <div class="input-group" id="addrGroup">
+                <input type="text" id="recipientInput" value="0xD6d8881CA520ac5F586ee61786A4Da279c9c8b6e" placeholder="0x…" autocomplete="off" spellcheck="false">
+                <div class="actions">
+                    <div class="clear-btn" id="clearAddr"></div>
+                    <span class="blue-text" id="pasteBtn">Paste</span>
+                    <svg class="icon-svg" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="2" /><line x1="3" y1="8" x2="6" y2="8" /><line x1="3" y1="12" x2="6" y2="12" /><line x1="3" y1="16" x2="6" y2="16" /></svg>
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1-1h-3M8 20H5a1 1 0 0 1-1-1v-3" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <label class="label">Destination network</label>
+            <div class="network-pill">
+                <img src="bnb.png" class="bnb-logo-image" alt="BNB">
+                <span class="network-text">BNB Smart Chain (BEP20)</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9FA3A9" stroke-width="4"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+        </div>
+
+        <div class="section">
+            <label class="label">Amount</label>
+            <div class="input-group" id="amountGroup">
+                <input type="text" id="amountInput" placeholder="0" inputmode="decimal" autocomplete="off">
+                <div class="actions">
+                    <div class="clear-btn" id="clearAmount"></div>
+                    <span style="color: #616469; font-size: 14px; font-weight: 500;">USDT</span>
+                    <span class="blue-text" id="maxBtn">Max</span>
+                </div>
+            </div>
+            <div class="approx-txt">≈ $<span id="usdLabel">0.00</span> &nbsp;·&nbsp; Balance: <span id="balLabel">—</span> USDT</div>
+            <div class="msg" id="msg"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <button class="next-btn" id="nextBtn" disabled>Next</button>
+    </div>
+
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script defer src="./app.js"></script>
+</body>
+</html>
